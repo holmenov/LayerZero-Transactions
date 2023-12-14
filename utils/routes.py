@@ -34,7 +34,7 @@ async def random_route(account_id: int, key: str, proxy: str):
     random_routes = [route for name, route in routes.items() if getattr(rs, name).USE_IN_RANDOM]
 
     choice = random.choice(random_routes)
-    await choice(account_id, key, proxy)
+    return await choice(account_id, key, proxy)
 
 
 async def okx_withdraw(account_id: int, key: str, proxy: str):

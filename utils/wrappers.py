@@ -19,7 +19,7 @@ def check_gas(func):
             while gas_price_gwei > SETTINGS.MAX_GAS:
                 await asyncio.sleep(1)
 
-        await func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return wrapper
 
@@ -35,15 +35,16 @@ def repeats(func):
         while current_repeat < SETTINGS.REPEATS_PER_WALLET:
             success = await func(*args, **kwargs)
 
-            if not success: break
+            current_repeat += 1
 
+            if not success or current_repeat == SETTINGS.REPEATS_PER_WALLET:
+                break
+            
             await async_sleep(
                 SETTINGS.SLEEP_AFTER_WORK_FROM,
                 SETTINGS.SLEEP_AFTER_WORK_TO,
-                account_id=kwargs['account_id'],
-                key=kwargs['key']
+                account_id=args[1],
+                key=args[2]
             )
-            
-            current_repeat += 1
 
     return wrapper

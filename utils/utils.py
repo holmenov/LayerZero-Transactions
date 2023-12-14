@@ -3,9 +3,10 @@ import random
 import sys
 from loguru import logger
 import eth_account
+from web3 import AsyncWeb3
 
 from modules.okx_withdraw import OKXWithdraw
-from utils.config import ACCOUNTS, PROXIES
+from utils.config import ACCOUNTS, PROXIES, RPC
 from settings import MainSettings as SETTINGS
 
 
@@ -21,16 +22,34 @@ async def async_sleep(sleep_from: int, sleep_to: int, logs: bool = True, account
     for _ in range(delay): await asyncio.sleep(1)
 
 
-async def okx_withdraw(account_id, key):
+async def wait_until_change_balance(account_id: int, address: str, proxy: str):
+    w3 = AsyncWeb3(
+        AsyncWeb3.AsyncHTTPProvider(random.choice(RPC[SETTINGS.SEND_FROM.chain]['rpc'])),
+        request_kwargs={'proxy': f'http://{proxy}'} if proxy else {}
+    )
+    
+    initial_balance = current_balance = await w3.eth.get_balance(address)
+    
+    while initial_balance == current_balance:
+        await async_sleep(10, 10, logs=False)
+        current_balance = await w3.eth.get_balance(address)
+    
+    logger.success(f'Account №{account_id} | {address} | The tokens have been successfully credited.')
+
+
+async def okx_withdraw(account_id, key, proxy):
     okx = OKXWithdraw(account_id, key)
     withdraw_success = await okx.withdraw()
 
+    address = get_wallet_address(key)
+
     if withdraw_success:
-        await async_sleep(90, 150, True, account_id, key, 'waiting tokens to arrive on the wallet')
+        logger.info(f'Account №{account_id} | {address} | Waiting for tokens from OKX.')
+        await wait_until_change_balance(account_id, address, proxy)
         return True
     else:
         logger.error(
-            f'Account №{account_id} | {get_wallet_address(key)} | The withdrawal has not been created. Work with the account has been completed unsuccessfully.'
+            f'Account №{account_id} | {address} | The withdrawal has not been created. Work with the account has been completed unsuccessfully.'
         )
         return False
 

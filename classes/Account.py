@@ -81,18 +81,18 @@ class Account:
         
         while True:
             if attempt_counter == ATTEMPTS:
-                return logger.error(f'{self.account_id} | {self.address} | {self.explorer}{hash.hex()} transaction not found!')
+                return logger.warning(f'Account №{self.account_id} | {self.address} | {self.explorer}{hash.hex()} transaction not found!')
 
             try:
                 receipts = await self.w3.eth.get_transaction_receipt(hash)
                 status = receipts.get('status')
 
                 if status == 1:
-                    return logger.success(f'{self.account_id} | {self.address} | {self.explorer}{hash.hex()} successfully!')
+                    return logger.success(f'Account №{self.account_id} | {self.address} | {self.explorer}{hash.hex()} successfully!')
                 elif status is None:
                     await asyncio.sleep(1)
                 else:
-                    return logger.success(f'{self.account_id} | {self.address} | {self.explorer}{hash.hex()} transaction failed!')
+                    return logger.success(f'Account №{self.account_id} | {self.address} | {self.explorer}{hash.hex()} transaction failed!')
             except Exception:
                 await async_sleep(10, 10, False)
                 attempt_counter += 1

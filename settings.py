@@ -21,10 +21,10 @@ class MainSettings:
 
     # Period in seconds to run all wallets
     START_PERIOD_FROM = 1
-    START_PERIOD_TO = 200
+    START_PERIOD_TO = 270
 
     # Module repetitions for each wallet
-    REPEATS_PER_WALLET = 10
+    REPEATS_PER_WALLET = 15
 
     # Sleeps after work
     SLEEP_AFTER_WORK_FROM = 5 # Seconds
@@ -49,8 +49,8 @@ class OKXSettings:
     FEE = 0.1
     
     # Withdrawal amount
-    AMOUNT_FROM = 1
-    AMOUNT_TO = 1.2
+    AMOUNT_FROM = 1.7
+    AMOUNT_TO = 2
     
 
     # Here you can get your api-key: https://www.okx.cab/ru/account/my-api
@@ -136,7 +136,7 @@ class RoutesSettings:
         MIN_AMOUNT = 0.00005
         MAX_AMOUNT = 0.00009
         DECIMAL = 6
-        USE_IN_RANDOM = True
+        USE_IN_RANDOM = False
 
     class Harmony:
         MIN_AMOUNT = 0.00005

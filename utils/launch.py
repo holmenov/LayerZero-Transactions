@@ -26,7 +26,7 @@ async def _run_module(module: Callable, account_id: int, key: str, proxy: str):
     )
 
     if SETTINGS.OKX_WITHDRAW:
-        success = await okx_withdraw(account_id, key)
+        success = await okx_withdraw(account_id, key, proxy)
         if not success: return False
 
     await run_module(module, account_id, key, proxy)
@@ -39,3 +39,4 @@ async def _run_module(module: Callable, account_id: int, key: str, proxy: str):
 async def run_module(module: Callable, account_id: int, key: str, proxy: str):
     succcess_bridge = await module(account_id, key, proxy)
     if not succcess_bridge: return False
+    return True
