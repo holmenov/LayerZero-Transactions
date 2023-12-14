@@ -1,0 +1,22 @@
+{
+    "arbitrum": 110,
+    "arbitrum-nova": 175,
+    "optimism": 111,
+    "zksync": 165,
+    "polygon-zkevm": 185,
+    "zora": 195,
+    "scroll": 214,
+    "polygon": 109,
+    "moonbeam": 126,
+    "moonriver": 167,
+    "canto": 159,
+    "harmony": 116,
+    "kava": 177,
+    "conflux": 212,
+    "gnosis": 145,
+    "coredao": 153,
+    "fuse": 138,
+    "klaytn": 150,
+    "dfk": 115,
+    "orderly": 213
+}
