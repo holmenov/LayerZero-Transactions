@@ -56,5 +56,9 @@ class Merkly(Account):
             await self.execute_transaction(tx)
             return True
         except Exception as error:
-            logger.error(f'Account №{self.account_id} | {self.address} | An error occurred while using Merkly. This account has been terminated: {error}.')
+            if 'insufficient funds for transfer' in error:
+                logger.error(f'Account №{self.account_id} | {self.address} | Out of balance on OKX.')
+            else:
+                logger.error(f'Account №{self.account_id} | {self.address} | An error occurred while using Merkly. This account has been terminated: {error}.')
+
             return False

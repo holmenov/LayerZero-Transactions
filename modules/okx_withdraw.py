@@ -3,7 +3,6 @@ from datetime import datetime
 import hmac
 import random
 import aiohttp
-import ccxt
 import eth_account
 from loguru import logger
 
@@ -66,7 +65,9 @@ class OKXWithdraw:
 
         return headers
 
-    async def withdraw(self):
+    async def withdraw(self, amount_withdraw: float = 0):
+        self.amount = amount_withdraw if amount_withdraw != 0 else self.amount
+        
         try:
             body = {
                 "ccy": self.symbol,

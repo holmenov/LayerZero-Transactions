@@ -8,7 +8,7 @@ from classes.Chains import Networks
 
 class MainSettings:
     # Gwei control
-    MAX_GAS = 80
+    MAX_GAS = 40
     
     # Take the wallets in random order
     RANDOM_WALLETS = True 
@@ -21,10 +21,10 @@ class MainSettings:
 
     # Period in seconds to run all wallets
     START_PERIOD_FROM = 1
-    START_PERIOD_TO = 270
+    START_PERIOD_TO = 3600
 
     # Module repetitions for each wallet
-    REPEATS_PER_WALLET = 15
+    REPEATS_PER_WALLET = 1
 
     # Sleeps after work
     SLEEP_AFTER_WORK_FROM = 5 # Seconds
@@ -33,8 +33,10 @@ class MainSettings:
     # Blockchain sender
     SEND_FROM = Networks.Polygon # Networks.(Chain) in Chain insert your chain
     
-    # Withdraw from OKX before work
+    # Withdraw from OKX before work or top up to Or top up to a certain value
+    # Select withdraw or top up
     OKX_WITHDRAW = False
+    OKX_TOP_UP = True
 
 
 # =================================================================
@@ -48,15 +50,19 @@ class OKXSettings:
     CHAIN = 'Polygon'
     FEE = 0.1
     
-    # Withdrawal amount
-    AMOUNT_FROM = 1.7
-    AMOUNT_TO = 2
+    # Withdrawal amount (For withdraw module)
+    AMOUNT_FROM = 0.2
+    AMOUNT_TO = 0.4
     
+    # Amount for top up balance (For Top Up Module)
+    MIN_AMOUNT = 0.1
+    MAX_AMOUNT = 0.2
+    DECIMALS = 2
 
     # Here you can get your api-key: https://www.okx.cab/ru/account/my-api
-    SECRET_KEY = 'key'
-    API_KEY = 'api'
-    PASSPHRASE = 'passphrase'
+    SECRET_KEY = 'YOUR_DATA'
+    API_KEY = 'YOUR_DATA'
+    PASSPHRASE = 'YOUR_DATA'
     
 
 # ===========================================================
@@ -148,7 +154,7 @@ class RoutesSettings:
         MIN_AMOUNT = 0.00005
         MAX_AMOUNT = 0.00009
         DECIMAL = 6
-        USE_IN_RANDOM = True
+        USE_IN_RANDOM = False
 
     class Conflux:
         MIN_AMOUNT = 0.00005

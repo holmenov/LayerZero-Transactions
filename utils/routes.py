@@ -2,10 +2,11 @@ import random
 
 from modules.merkly import Merkly
 from modules.okx_withdraw import OKXWithdraw
+from modules.okx_top_up import OKXTopUp
 from classes.Chains import DestinationChains
 from settings import RoutesSettings as rs
 from settings import MainSettings as SETTINGS
-
+from settings import OKXSettings
 
 async def random_route(account_id: int, key: str, proxy: str):
     routes = {
@@ -40,6 +41,15 @@ async def random_route(account_id: int, key: str, proxy: str):
 async def okx_withdraw(account_id: int, key: str, proxy: str):
     okx_withdraw = OKXWithdraw(account_id, key)
     await okx_withdraw.withdraw()
+    
+
+async def okx_top_up(account_id: int, key: str, proxy: str):
+    min_amount = OKXSettings.MIN_AMOUNT
+    max_amount = OKXSettings.MAX_AMOUNT
+    decimals = OKXSettings.DECIMALS
+    
+    okx_top_up = OKXTopUp(account_id, key, proxy)
+    await okx_top_up.top_up_balance(min_amount, max_amount, decimals)
 
 
 async def bridge_route(route, account_id: int, key: str, proxy: str):

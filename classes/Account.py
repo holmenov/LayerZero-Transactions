@@ -7,7 +7,6 @@ from web3 import AsyncWeb3
 from web3.types import TxParams
 
 from utils.config import ERC20_ABI, RPC
-from utils.utils import async_sleep
 
 
 class Account:
@@ -26,7 +25,15 @@ class Account:
         )
 
         self.address = eth_account.Account.from_key(private_key).address
+
+    @staticmethod
+    def wei_to_eth(amount_wei: int, decimals: int = 18) -> float:
+        return amount_wei / (10 ** decimals)
     
+    @staticmethod
+    def eth_to_wei(amount_eth: float, decimals: int = 18) -> int:
+        return amount_eth * (10 ** decimals)
+
     async def get_amount(self, min_amount: float, max_amount: float, decimal: int):
         balance = await self.w3.eth.get_balance(self.address)
         amount = round(random.uniform(min_amount, max_amount), decimal)
@@ -94,5 +101,5 @@ class Account:
                 else:
                     return logger.success(f'Account №{self.account_id} | {self.address} | {self.explorer}{hash.hex()} transaction failed!')
             except Exception:
-                await async_sleep(10, 10, False)
+                for _ in range(10): await asyncio.sleep(1)
                 attempt_counter += 1

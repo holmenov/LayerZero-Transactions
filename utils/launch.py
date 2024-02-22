@@ -1,9 +1,7 @@
 import asyncio
-import random
 from typing import Callable
-from loguru import logger
 
-from utils.utils import async_sleep, get_wallet_address, okx_withdraw, remove_wallet_from_files
+from utils.utils import async_sleep, okx_withdraw, remove_wallet_from_files
 from settings import MainSettings as SETTINGS
 from utils.wrappers import repeats
 
@@ -25,7 +23,7 @@ async def _run_module(module: Callable, account_id: int, key: str, proxy: str):
         True, account_id, key, 'before starting work'
     )
 
-    if SETTINGS.OKX_WITHDRAW:
+    if SETTINGS.OKX_WITHDRAW or SETTINGS.OKX_TOP_UP:
         success = await okx_withdraw(account_id, key, proxy)
         if not success: return False
 

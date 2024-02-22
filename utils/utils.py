@@ -6,8 +6,10 @@ import eth_account
 from web3 import AsyncWeb3
 
 from modules.okx_withdraw import OKXWithdraw
+from modules.okx_top_up import OKXTopUp
 from utils.config import ACCOUNTS, PROXIES, RPC
 from settings import MainSettings as SETTINGS
+from settings import OKXSettings
 
 
 async def async_sleep(sleep_from: int, sleep_to: int, logs: bool = True, account_id: int = 0, key: str = '', msg: str = ''):
@@ -38,15 +40,28 @@ async def wait_until_change_balance(account_id: int, address: str, proxy: str):
 
 
 async def okx_withdraw(account_id, key, proxy):
-    okx = OKXWithdraw(account_id, key)
-    withdraw_success = await okx.withdraw()
+    if SETTINGS.OKX_WITHDRAW and SETTINGS.OKX_TOP_UP:
+        logger.error(f'You have deposits and withdrawals from OKX enabled at the same time. Select one!')
+        sys.exit()
+    
+    if SETTINGS.OKX_TOP_UP:
+        okx_top_up = OKXTopUp(account_id, key, proxy)
+        withdraw_success = await okx_top_up.top_up_balance(OKXSettings.MIN_AMOUNT, OKXSettings.MAX_AMOUNT, OKXSettings.DECIMALS)
+    
+    if SETTINGS.OKX_WITHDRAW:
+        okx = OKXWithdraw(account_id, key)
+        withdraw_success = await okx.withdraw()
 
     address = get_wallet_address(key)
 
-    if withdraw_success:
+    if withdraw_success == 'Filled':
+        return True
+
+    elif withdraw_success:
         logger.info(f'Account №{account_id} | {address} | Waiting for tokens from OKX.')
         await wait_until_change_balance(account_id, address, proxy)
         return True
+    
     else:
         logger.error(
             f'Account №{account_id} | {address} | The withdrawal has not been created. Work with the account has been completed unsuccessfully.'
